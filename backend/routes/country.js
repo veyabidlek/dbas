@@ -10,6 +10,6 @@ const CountryRouter = Router();
 
 CountryRouter.get("/get", getAllCountries);
 CountryRouter.post("/create", createCountry);
-CountryRouter.put("/create", updateCountry);
+CountryRouter.put("/update", updateCountry);
 CountryRouter.delete("/delete", deleteCountry);
 export default CountryRouter;

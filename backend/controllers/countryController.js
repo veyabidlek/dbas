@@ -28,7 +28,7 @@ export const updateCountry = async (req, res) => {
   const { population, cname } = req.body;
   try {
     const result = await pool.query(
-      "UPDATE Country SET populatuion = $1 WHERE cname = $2 RETURNING *",
+      "UPDATE Country SET population = $1 WHERE cname = $2 RETURNING *",
       [population, cname]
     );
     if (result.rows.length == 0) {
