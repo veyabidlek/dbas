@@ -1,0 +1,7 @@
+{
+  "name": "dbas",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "cd backend && npm install && npm start"
+  }
+}
