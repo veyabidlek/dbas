@@ -14,7 +14,7 @@ export const createPatient = async (req, res) => {
   const { email } = req.body;
   try {
     const result = await pool.query(
-      "INSERT INTO Patient (email) VALUES ($1) RETURNING *",
+      "INSERT INTO Patients (email) VALUES ($1) RETURNING *",
       [email]
     );
     res.status(201).json(result.rows[0]);
