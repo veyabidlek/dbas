@@ -4,6 +4,7 @@ export default function Home() {
   const tables = [
     { name: "Country Table", href: "/country" },
     { name: "Users Table", href: "/users" },
+    { name: "Disease Table", href: "/disease" },
     { name: "Patients Table", href: "/patients" },
     { name: "Doctors Table", href: "/doctors" },
     { name: "Public Servant Table", href: "/public-servants" },
