@@ -22,47 +22,53 @@ export default function PublicServant() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/public-servant/get`);
+      const response = await axios.get(`${apiUrl}/patient-disease/get`);
       setUsers(response.data.rows);
       setMessage("");
     } catch (error) {
-      console.error("Error fetching public-servants:", error);
-      setMessage("Error fetching public-servants.");
+      console.error("Error fetching patient-diseases:", error);
+      setMessage("Error fetching patient-diseases.");
     }
   };
   const onUpdate = async (data) => {
     try {
-      await axios.put(`${apiUrl}/public-servant/update`, data);
-      setMessage("Public servant updated successfully!");
+      const { email, disease_code } = selectedUser;
+      const updatePayload = {
+        old_email: email,
+        old_disease_code: disease_code,
+        new_disease_code: data.new_disease_code,
+      };
+      await axios.put(`${apiUrl}/patient-disease/update`, updatePayload);
+      setMessage("patient-disease updated successfully!");
       reset();
       if (operation === "LIST") fetchUsers();
     } catch (error) {
-      console.error("Error updating publicservant:", error);
-      setMessage("Failed to update publicservant.");
+      console.error("Error updating patient-disease", error);
+      setMessage("Failed to update patient-disease.");
     }
   };
   // Handle Create
   const onCreate = async (data) => {
     try {
-      await axios.post(`${apiUrl}/public-servant/create`, data);
-      setMessage("public-servant addded successfully!");
+      await axios.post(`${apiUrl}/patient-disease/create`, data);
+      setMessage("patient-disease addded successfully!");
       reset();
       if (operation === "LIST") fetchUsers();
     } catch (error) {
-      console.error("Error creating public-servant:", error);
-      setMessage("Failed to create public-servant.");
+      console.error("Error creating patient-disease", error);
+      setMessage("Failed to create patient-disease.");
     }
   };
 
   const onDelete = async (data) => {
     try {
-      await axios.delete(`${apiUrl}/public-servant/delete`, { data });
-      setMessage("Public servant deleted successfully!");
+      await axios.delete(`${apiUrl}/patient-disease/delete`, { data });
+      setMessage("patient-disease deleted successfully!");
       reset();
       if (operation === "LIST") fetchUsers();
     } catch (error) {
-      console.error("Error deleting user:", error);
-      setMessage("Failed to delete user.");
+      console.error("Error deleting patient-disease:", error);
+      setMessage("Failed to delete patient-disease.");
     }
   };
 
@@ -74,7 +80,7 @@ export default function PublicServant() {
       >
         Return
       </Link>
-      <h1>Public Servant Management</h1>
+      <h1>Patient Disease Management</h1>
       {/* Operation Selection */}
       <div style={styles.buttonGroup}>
         <button onClick={() => setOperation("LIST")} style={styles.button}>
@@ -102,14 +108,14 @@ export default function PublicServant() {
             <thead>
               <tr>
                 <th>Email</th>
-                <th>Department</th>
+                <th>Disease Code</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.email}>
+                <tr key={user.email + user.disease_code}>
                   <td>{user.email}</td>
-                  <td>{user.department}</td>
+                  <td>{user.disease_code}</td>
                   <td>
                     <button
                       onClick={() => {
@@ -138,7 +144,7 @@ export default function PublicServant() {
       {operation === "CREATE" && (
         <div>
           <h2 className="text-[red] font-bold text-lg mb-4 underline">
-            Add Public Servant
+            Add Patient Disease
           </h2>
           <form onSubmit={handleSubmit(onCreate)} style={styles.form}>
             <div style={styles.formGroup}>
@@ -149,11 +155,11 @@ export default function PublicServant() {
                 placeholder="Email"
                 style={styles.input}
               />
-              <label>Department:</label>
+              <label>Patient Disease:</label>
               <input
-                name="department"
-                {...register("department", { required: true })}
-                placeholder="department"
+                name="disease_code"
+                {...register("disease_code", { required: true })}
+                placeholder="disease_code"
                 style={styles.input}
               />
             </div>
@@ -165,14 +171,17 @@ export default function PublicServant() {
       )}
       {operation === "UPDATE" && (
         <div>
-          <h2>Update Public Servant</h2>
+          <h2>Update Patient Disease</h2>
           <form onSubmit={handleSubmit(onUpdate)} style={styles.form}>
             <div style={styles.formGroup}>
-              <label>Select Public Servant to Update:</label>
+              <label>Select Patient Disease to Update:</label>
               <select
                 name="email"
                 {...register("email", { required: true })}
-                onChange={(e) => setSelectedUser(e.target.value)}
+                onChange={(e) => {
+                  const [email, disease_code] = e.target.value.split(",");
+                  setSelectedUser(e.target.value);
+                }}
                 style={styles.input}
                 defaultValue=""
               >
@@ -180,8 +189,8 @@ export default function PublicServant() {
                   -- Select Public Servant --
                 </option>
                 {users.map((d) => (
-                  <option key={d.email} value={d.email}>
-                    {d.email + " " + d.department}
+                  <option key={d.email + d.disease_code} value={d.email}>
+                    {d.email + " " + d.disease_code}
                   </option>
                 ))}
               </select>
@@ -189,11 +198,14 @@ export default function PublicServant() {
             {selectedUser && (
               <>
                 <div style={styles.formGroup}>
-                  <label>New Department:</label>
+                  <label>New Patient Disease:</label>
                   <input
                     type="text"
-                    name="department"
-                    {...register("department", { required: true, min: 0 })}
+                    name="new_disease_code"
+                    {...register("new_disease_code", {
+                      required: true,
+                      min: 0,
+                    })}
                     style={styles.input}
                   />
                 </div>
@@ -207,14 +219,14 @@ export default function PublicServant() {
       )}
       {operation === "DELETE" && (
         <div>
-          <h2>Delete Public Servant </h2>
+          <h2>Delete Patient Disease </h2>
           <form onSubmit={handleSubmit(onDelete)} style={styles.form}>
             <div style={styles.formGroup}>
-              <label>User Email:</label>
+              <label>Patient Email:</label>
               <input
                 name="email"
                 {...register("email", { required: true })}
-                placeholder="User email"
+                placeholder="Patient email"
                 style={styles.input}
               />
             </div>
