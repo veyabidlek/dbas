@@ -11,6 +11,7 @@ export default function Home() {
     { name: "Record Table", href: "/record" },
     { name: "Specialize Table", href: "/specialize" },
     { name: "Disease Type Table", href: "/disease-type" },
+    { name: "Disease Discover Table", href: "/discover" },
   ];
 
   return (
