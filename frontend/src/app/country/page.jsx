@@ -3,14 +3,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
+import "dotenv/config";
+const apiUrl = process.env.BACKEND_URL;
 export default function Country() {
   const [operation, setOperation] = useState("LIST"); // Default operation
   const [countries, setCountries] = useState([]);
   const [message, setMessage] = useState("");
   const { register, handleSubmit, reset } = useForm();
   const [selectedCountry, setSelectedCountry] = useState("");
-
-  const apiUrl = "http://localhost:8000";
 
   useEffect(() => {
     if (operation === "LIST") {

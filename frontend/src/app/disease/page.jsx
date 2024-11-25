@@ -3,14 +3,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
+import "dotenv/config";
+const apiUrl = process.env.BACKEND_URL;
 export default function Disease() {
   const [operation, setOperation] = useState("LIST"); // Default operation
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState("");
   const { register, handleSubmit, reset } = useForm();
   const [selectedUser, setSelectedUser] = useState("");
-
-  const apiUrl = "http://localhost:8000";
 
   useEffect(() => {
     if (operation === "LIST") {
