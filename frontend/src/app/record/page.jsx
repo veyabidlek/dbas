@@ -22,7 +22,7 @@ export default function User() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/users/get`);
+      const response = await axios.get(`${apiUrl}/record/get`);
       setUsers(response.data.rows);
       setMessage("");
     } catch (error) {
@@ -34,7 +34,7 @@ export default function User() {
   // Handle Create
   const onCreate = async (data) => {
     try {
-      await axios.post(`${apiUrl}/users/create`, data);
+      await axios.post(`${apiUrl}/record/create`, data);
       setMessage("User created successfully!");
       reset();
       if (operation === "LIST") fetchUsers();
@@ -46,7 +46,7 @@ export default function User() {
 
   const onUpdate = async (data) => {
     try {
-      await axios.put(`${apiUrl}/users/update`, data);
+      await axios.put(`${apiUrl}/record/update`, data);
       setMessage("User updated successfully!");
       reset();
       if (operation === "LIST") fetchUsers();
@@ -58,8 +58,8 @@ export default function User() {
 
   const onDelete = async (data) => {
     try {
-      await axios.delete(`${apiUrl}/users/delete`, { data });
-      setMessage("User deleted successfully!");
+      await axios.delete(`${apiUrl}/record/delete`, { data });
+      setMessage("Record deleted successfully!");
       reset();
       if (operation === "LIST") fetchUsers();
     } catch (error) {
@@ -76,7 +76,7 @@ export default function User() {
       >
         Return
       </Link>
-      <h1>User Management</h1>
+      <h1>Record Management</h1>
       {/* Operation Selection */}
       <div style={styles.buttonGroup}>
         <button onClick={() => setOperation("LIST")} style={styles.button}>
@@ -99,32 +99,32 @@ export default function User() {
       {/* Operation Components */}
       {operation === "LIST" && (
         <div>
-          <h2>List of Users</h2>
+          <h2>Record</h2>
           <table style={styles.table}>
             <thead>
               <tr>
                 <th>Email</th>
-                <th>Name</th>
-                <th>Surname</th>
-                <th>Salary</th>
-                <th>Phone</th>
                 <th>Country</th>
-                <th>Actions</th>
+                <th>Disease code</th>
+                <th>Total Deaths</th>
+                <th>Total Patients</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.email}>
+                <tr key={user.email + user.cname + user.disease_code}>
                   <td>{user.email}</td>
-                  <td>{user.name}</td>
-                  <td>{user.surname}</td>
-                  <td>{user.salary}</td>
-                  <td>{user.phone}</td>
                   <td>{user.cname}</td>
+                  <td>{user.disease_code}</td>
+                  <td>{user.total_deaths}</td>
+                  <td>{user.total_patients}</td>
+
                   <td>
                     <button
                       onClick={() => {
-                        setSelectedUser(user.email);
+                        setSelectedUser(
+                          `${user.email},${user.cname},${user.disease_code}`
+                        );
                         setOperation("UPDATE");
                       }}
                       style={styles.actionButton}
@@ -133,7 +133,13 @@ export default function User() {
                     </button>
                     {" | "}
                     <button
-                      onClick={() => onDelete({ email: user.email })}
+                      onClick={() =>
+                        onDelete({
+                          email: user.email,
+                          cname: user.cname,
+                          disease_code: user.disease_code,
+                        })
+                      }
                       style={styles.actionButton}
                     >
                       Delete
@@ -291,14 +297,28 @@ export default function User() {
 
       {operation === "DELETE" && (
         <div>
-          <h2>Delete User</h2>
+          <h2>Delete Record</h2>
           <form onSubmit={handleSubmit(onDelete)} style={styles.form}>
             <div style={styles.formGroup}>
-              <label>User Email:</label>
+              <label>Email:</label>
               <input
                 name="email"
                 {...register("email", { required: true })}
-                placeholder="User email"
+                placeholder="email"
+                style={styles.input}
+              />
+              <label>Country:</label>
+              <input
+                name="cname"
+                {...register("cname", { required: true })}
+                placeholder="Country"
+                style={styles.input}
+              />
+              <label>Disease Code:</label>
+              <input
+                name="disease_code"
+                {...register("disease_code", { required: true })}
+                placeholder="disease_code"
                 style={styles.input}
               />
             </div>

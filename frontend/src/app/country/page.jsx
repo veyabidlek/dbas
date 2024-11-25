@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-
+import Link from "next/link";
 export default function Country() {
   const [operation, setOperation] = useState("LIST"); // Default operation
   const [countries, setCountries] = useState([]);
@@ -72,6 +72,12 @@ export default function Country() {
 
   return (
     <div style={styles.container}>
+      <Link
+        href="/"
+        className="absolute top left-0 top-0 text-[red] hover:underline "
+      >
+        Return
+      </Link>
       <h1>Country Management</h1>
       {/* Operation Selection */}
       <div style={styles.buttonGroup}>
